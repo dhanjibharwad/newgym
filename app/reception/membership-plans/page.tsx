@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, CreditCard, Calendar, DollarSign } from 'lucide-react';
+import { Plus, Edit, Trash2, CreditCard, Calendar } from 'lucide-react';
 
 interface MembershipPlan {
   id: number;
@@ -190,7 +190,7 @@ export default function MembershipPlansPage() {
                     type="number"
                     min="1"
                     value={formData.duration_months}
-                    onChange={(e) => setFormData({ ...formData, duration_months: parseInt(e.target.value) })}
+                    onChange={(e) => setFormData({ ...formData, duration_months: parseInt(e.target.value) || 1 })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   />
@@ -204,7 +204,7 @@ export default function MembershipPlansPage() {
                     min="0"
                     step="0.01"
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     required
                   />
@@ -261,7 +261,6 @@ export default function MembershipPlansPage() {
                     {plan.duration_months} {plan.duration_months === 1 ? 'Month' : 'Months'}
                   </div>
                   <div className="text-sm text-gray-500 flex items-center justify-center gap-1">
-                    <DollarSign className="w-3 h-3" />
                     ₹{(plan.price / plan.duration_months).toFixed(0)}/month
                   </div>
                 </div>
