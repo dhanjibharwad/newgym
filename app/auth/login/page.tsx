@@ -135,7 +135,7 @@ export default function LoginPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="w-full px-4 py-3 bg-white border border-gray-300 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none transition text-gray-900"
-                placeholder="admin@eaglegym.com"
+                placeholder="Enter your email"
               />
             </div>
 
