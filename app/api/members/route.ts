@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN memberships ms ON m.id = ms.member_id
       LEFT JOIN membership_plans mp ON ms.plan_id = mp.id
       LEFT JOIN payments p ON ms.id = p.membership_id
-      ORDER BY m.id ASC
+      ORDER BY m.created_at DESC
     `);
     
     return NextResponse.json({

@@ -22,6 +22,7 @@ interface Member {
   created_at: string;
   end_date: string;
   plan_name: string;
+  profile_photo_url?: string;
 }
 
 interface Payment {
@@ -37,6 +38,7 @@ interface RecentMember {
   plan: string;
   joinDate: string;
   status: string;
+  profilePhoto?: string;
 }
 
 interface ExpiringMember {
@@ -45,6 +47,7 @@ interface ExpiringMember {
   plan: string;
   expiryDate: string;
   daysLeft: number;
+  profilePhoto?: string;
 }
 
 const Dashboard = () => {
@@ -151,7 +154,8 @@ const Dashboard = () => {
             name: m.full_name,
             plan: m.plan_name,
             joinDate: new Date(m.created_at).toLocaleDateString('en-IN'),
-            status: m.membership_status === 'active' ? 'Active' : 'Inactive'
+            status: m.membership_status === 'active' ? 'Active' : 'Inactive',
+            profilePhoto: m.profile_photo_url
           }));
         
         // Expiring members
@@ -175,7 +179,8 @@ const Dashboard = () => {
               name: m.full_name,
               plan: m.plan_name,
               expiryDate: new Date(m.end_date).toLocaleDateString('en-IN'),
-              daysLeft
+              daysLeft,
+              profilePhoto: m.profile_photo_url
             };
           });
         
@@ -366,9 +371,17 @@ const Dashboard = () => {
               {dashboardData.recentMembers.length > 0 ? dashboardData.recentMembers.map((member) => (
                 <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                      {member.name.charAt(0)}
-                    </div>
+                    {member.profilePhoto ? (
+                      <img
+                        className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                        src={member.profilePhoto}
+                        alt={member.name}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-700 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {member.name.charAt(0)}
+                      </div>
+                    )}
                     <div>
                       <p className="font-medium text-gray-900">{member.name}</p>
                       <p className="text-sm text-gray-600">{member.plan} • {member.joinDate}</p>
@@ -406,9 +419,17 @@ const Dashboard = () => {
               {dashboardData.expiringMembers.length > 0 ? dashboardData.expiringMembers.map((member) => (
                 <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                      {member.name.charAt(0)}
-                    </div>
+                    {member.profilePhoto ? (
+                      <img
+                        className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
+                        src={member.profilePhoto}
+                        alt={member.name}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-r from-gray-700 to-gray-800 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {member.name.charAt(0)}
+                      </div>
+                    )}
                     <div>
                       <p className="font-medium text-gray-900">{member.name}</p>
                       <p className="text-sm text-gray-600">{member.plan} • Expires {member.expiryDate}</p>
