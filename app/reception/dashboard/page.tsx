@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Users,
   UserPlus,
@@ -51,6 +52,7 @@ interface ExpiringMember {
 }
 
 const Dashboard = () => {
+  const router = useRouter();
   const [currentTime, setCurrentTime] = useState('');
   const [dashboardData, setDashboardData] = useState({
     totalMembers: 0,
@@ -345,7 +347,10 @@ const Dashboard = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">Recent Members</h3>
-              <button className="text-sm text-orange-600 hover:text-orange-700 font-medium">
+              <button 
+                onClick={() => router.push('/reception/members')}
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium cursor-pointer"
+              >
                 View All
               </button>
             </div>
@@ -393,7 +398,10 @@ const Dashboard = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">Expiring Soon</h3>
-              <button className="text-sm text-orange-600 hover:text-orange-700 font-medium">
+              <button 
+                onClick={() => router.push('/reception/expired')}
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+              >
                 View All
               </button>
             </div>
