@@ -50,6 +50,9 @@ export async function POST(request: Request) {
       );
     }
     
+    // Determine user role from request headers or URL
+    const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
+    
     const client = await pool.connect();
     
     try {
@@ -57,6 +60,19 @@ export async function POST(request: Request) {
         'INSERT INTO membership_plans (plan_name, duration_months, price) VALUES ($1, $2, $3) RETURNING *',
         [plan_name, duration_months, price]
       );
+      
+      // Log the action
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'CREATE',
+          entity_type: 'membership_plan',
+          entity_id: result.rows[0].id,
+          details: `Created plan: ${plan_name} (${duration_months} months, ₹${price})`,
+          user_role: userRole
+        })
+      });
       
       return NextResponse.json({
         success: true,
@@ -93,9 +109,15 @@ export async function PUT(request: Request) {
       );
     }
     
+    // Determine user role from request headers or URL
+    const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
+    
     const client = await pool.connect();
     
     try {
+      // Get old plan details for logging
+      const oldPlan = await client.query('SELECT * FROM membership_plans WHERE id = $1', [id]);
+      
       const result = await client.query(
         'UPDATE membership_plans SET plan_name = $1, duration_months = $2, price = $3 WHERE id = $4 RETURNING *',
         [plan_name, duration_months, price, id]
@@ -106,6 +128,22 @@ export async function PUT(request: Request) {
           { success: false, message: 'Plan not found' },
           { status: 404 }
         );
+      }
+      
+      // Log the action
+      if (oldPlan.rows.length > 0) {
+        const old = oldPlan.rows[0];
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'UPDATE',
+            entity_type: 'membership_plan',
+            entity_id: id,
+            details: `Updated plan: ${old.plan_name} → ${plan_name}, ${old.duration_months}m → ${duration_months}m, ₹${old.price} → ₹${price}`,
+            user_role: userRole
+          })
+        });
       }
       
       return NextResponse.json({
@@ -144,6 +182,9 @@ export async function DELETE(request: Request) {
       );
     }
     
+    // Determine user role from request headers or URL
+    const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
+    
     const client = await pool.connect();
     
     try {
@@ -160,6 +201,9 @@ export async function DELETE(request: Request) {
         );
       }
       
+      // Get plan details for logging
+      const planDetails = await client.query('SELECT * FROM membership_plans WHERE id = $1', [id]);
+      
       const result = await client.query(
         'DELETE FROM membership_plans WHERE id = $1 RETURNING *',
         [id]
@@ -170,6 +214,22 @@ export async function DELETE(request: Request) {
           { success: false, message: 'Plan not found' },
           { status: 404 }
         );
+      }
+      
+      // Log the action
+      if (planDetails.rows.length > 0) {
+        const plan = planDetails.rows[0];
+        await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'DELETE',
+            entity_type: 'membership_plan',
+            entity_id: id,
+            details: `Deleted plan: ${plan.plan_name} (${plan.duration_months} months, ₹${plan.price})`,
+            user_role: userRole
+          })
+        });
       }
       
       return NextResponse.json({

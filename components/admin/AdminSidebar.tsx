@@ -16,7 +16,8 @@ import {
   UserCog,
   Clock,
   BadgeCheck,
-  UserX 
+  UserX,
+  History
 } from 'lucide-react';
 
 const navItems = [
@@ -27,6 +28,7 @@ const navItems = [
   { label: "Add Members", href: "/admin/add-members", icon: UserPlus },
   { label: "Payments", href: "/admin/payments", icon: CreditCard },
   { label: "Membership Plans", href: "/admin/membership-plans", icon: Crown },
+  { label: "Audit Logs", href: "/admin/audit-logs", icon: History  },
   { label: "Payments History", href: "/admin/history", icon: Clock  },
   
   { label: "Full Payments", href: "/admin/fullpayment", icon: BadgeCheck  },
