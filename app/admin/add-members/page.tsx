@@ -167,7 +167,13 @@ const AddMemberPage = () => {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      // Convert numeric fields to numbers
+      let processedValue: string | number = value;
+      if (name === 'totalPlanFee' || name === 'amountPaidNow') {
+        processedValue = value === '' ? 0 : parseFloat(value) || 0;
+      }
+      
+      setFormData(prev => ({ ...prev, [name]: processedValue }));
       
       // Auto-fill total plan fee when plan is selected
       if (name === 'selectedPlan' && value) {
@@ -232,8 +238,11 @@ const AddMemberPage = () => {
       }
     }
 
-    // Amount validation
-    if (formData.amountPaidNow > formData.totalPlanFee) {
+    // Amount validation - ensure both values are numbers
+    const totalFee = Number(formData.totalPlanFee) || 0;
+    const paidAmount = Number(formData.amountPaidNow) || 0;
+    
+    if (paidAmount > totalFee) {
       newErrors.amountPaidNow = 'Amount paid cannot exceed total plan fee';
     }
 
