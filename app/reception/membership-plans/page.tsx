@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, CreditCard, Calendar } from 'lucide-react';
+import { Plus, Edit, Trash2, CreditCard, Calendar, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 
 interface MembershipPlan {
   id: number;
@@ -17,6 +17,17 @@ interface PlanFormData {
   price: number;
 }
 
+interface Toast {
+  id: number;
+  message: string;
+  type: 'success' | 'error' | 'warning';
+}
+
+interface DeleteConfirm {
+  show: boolean;
+  plan: MembershipPlan | null;
+}
+
 export default function MembershipPlansPage() {
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +40,20 @@ export default function MembershipPlansPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState<number | null>(null);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirm>({ show: false, plan: null });
+
+  const showToast = (message: string, type: 'success' | 'error' | 'warning') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, message, type }]);
+    setTimeout(() => {
+      setToasts(prev => prev.filter(toast => toast.id !== id));
+    }, 4000);
+  };
+
+  const removeToast = (id: number) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
   useEffect(() => {
     fetchPlans();
@@ -71,12 +96,12 @@ export default function MembershipPlansPage() {
       if (data.success) {
         await fetchPlans();
         resetForm();
-        alert(editingPlan ? 'Plan updated successfully!' : 'Plan created successfully!');
+        showToast(editingPlan ? 'Plan updated successfully!' : 'Plan created successfully!', 'success');
       } else {
-        alert(data.message || 'Failed to save plan');
+        showToast(data.message || 'Failed to save plan', 'error');
       }
     } catch (error) {
-      alert('Error saving plan');
+      showToast('Error saving plan', 'error');
     } finally {
       setSubmitting(false);
     }
@@ -93,11 +118,16 @@ export default function MembershipPlansPage() {
   };
 
   const handleDelete = async (plan: MembershipPlan) => {
-    if (!confirm(`Are you sure you want to delete "${plan.plan_name}"? This action cannot be undone.`)) {
-      return;
-    }
+    setDeleteConfirm({ show: true, plan });
+  };
 
+  const confirmDelete = async () => {
+    if (!deleteConfirm.plan) return;
+    
+    const plan = deleteConfirm.plan;
     setDeleteLoading(plan.id);
+    setDeleteConfirm({ show: false, plan: null });
+    
     try {
       const response = await fetch(`/api/membership-plans?id=${plan.id}`, {
         method: 'DELETE'
@@ -107,12 +137,12 @@ export default function MembershipPlansPage() {
 
       if (data.success) {
         await fetchPlans();
-        alert('Plan deleted successfully!');
+        showToast('Plan deleted successfully!', 'success');
       } else {
-        alert(data.message || 'Failed to delete plan');
+        showToast(data.message || 'Failed to delete plan', 'error');
       }
     } catch (error) {
-      alert('Error deleting plan');
+      showToast('Error deleting plan', 'error');
     } finally {
       setDeleteLoading(null);
     }
@@ -273,6 +303,65 @@ export default function MembershipPlansPage() {
           ))}
         </div>
         
+        {/* Toast Notifications */}
+        <div className="fixed top-4 right-4 z-50 space-y-2">
+          {toasts.map((toast) => (
+            <div
+              key={toast.id}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg transition-all duration-300 ${
+                toast.type === 'success' ? 'bg-green-500 text-white' :
+                toast.type === 'error' ? 'bg-red-500 text-white' :
+                'bg-yellow-500 text-white'
+              }`}
+            >
+              {toast.type === 'success' && <CheckCircle className="w-5 h-5" />}
+              {toast.type === 'error' && <XCircle className="w-5 h-5" />}
+              {toast.type === 'warning' && <AlertTriangle className="w-5 h-5" />}
+              <span className="font-medium">{toast.message}</span>
+              <button
+                onClick={() => removeToast(toast.id)}
+                className="ml-2 hover:opacity-70"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+
+        {/* Delete Confirmation Modal */}
+        {deleteConfirm.show && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <AlertTriangle className="w-5 h-5 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Delete Plan</h3>
+                  <p className="text-sm text-gray-600">This action cannot be undone</p>
+                </div>
+              </div>
+              <p className="text-gray-700 mb-6">
+                Are you sure you want to delete <strong>"{deleteConfirm.plan?.plan_name}"</strong>?
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={confirmDelete}
+                  className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setDeleteConfirm({ show: false, plan: null })}
+                  className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {plans.length === 0 && (
           <div className="text-center py-12">
             <CreditCard className="w-16 h-16 text-gray-300 mx-auto mb-4" />

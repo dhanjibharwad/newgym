@@ -88,11 +88,14 @@ export async function POST(request: NextRequest) {
       const planId = planResult.rows[0].id;
       
       // Calculate end date
+      const planDetailsResult = await client.query(
+        'SELECT duration_months FROM membership_plans WHERE id = $1',
+        [planId]
+      );
+      
       const startDate = new Date(data.planStartDate);
       const endDate = new Date(startDate);
-      const monthsToAdd = data.selectedPlan === 'Monthly' ? 1 : 
-                        data.selectedPlan === '3 Months' ? 3 :
-                        data.selectedPlan === '6 Months' ? 6 : 12;
+      const monthsToAdd = planDetailsResult.rows[0].duration_months;
       endDate.setMonth(endDate.getMonth() + monthsToAdd);
       
       // Insert membership

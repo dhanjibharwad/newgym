@@ -140,9 +140,14 @@ const AddMemberPage = () => {
       
       if (data.success) {
         setPlans(data.plans);
+        console.log('Fetched plans:', data.plans);
+      } else {
+        console.error('Failed to fetch plans:', data.message);
+        showToast('Failed to load membership plans', 'error');
       }
     } catch (error) {
       console.error('Error fetching plans:', error);
+      showToast('Error loading membership plans', 'error');
     } finally {
       setPlansLoading(false);
     }
@@ -245,16 +250,36 @@ const AddMemberPage = () => {
         // Create FormData for file upload support
         const formDataToSend = new FormData();
         
+        // Convert plan ID to plan name before sending to API
+        const selectedPlanId = formData.selectedPlan;
+        const selectedPlan = plans.find(plan => plan.id.toString() === selectedPlanId);
+        const planName = selectedPlan ? selectedPlan.plan_name : '';
+        
+        // Validate plan selection before sending
+        if (!planName) {
+          showToast('Please select a valid membership plan', 'error');
+          return;
+        }
+        
         // Add all form fields with proper type conversion
         Object.entries(formData).forEach(([key, value]) => {
           if (key !== 'profilePhoto') {
-            if (typeof value === 'boolean') {
+            if (key === 'selectedPlan') {
+              formDataToSend.append(key, planName);
+            } else if (typeof value === 'boolean') {
               formDataToSend.append(key, value.toString());
             } else {
               formDataToSend.append(key, value?.toString() || '');
             }
           }
         });
+        
+        // Debug logging
+        console.log('Selected Plan ID:', selectedPlanId);
+        console.log('Selected Plan Name:', planName);
+        console.log('Available Plans:', plans.map(p => ({ id: p.id, name: p.plan_name })));
+        console.log('Plans array length:', plans.length);
+        console.log('FormData selectedPlan value:', formData.selectedPlan);
         
         // Add profile photo if exists
         if (formData.profilePhoto) {
