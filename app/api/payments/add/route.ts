@@ -49,11 +49,11 @@ export async function POST(request: NextRequest) {
         [newPaidAmount, newStatus, payment_mode, membership_id]
       );
       
-      // Insert transaction record
+      // Insert transaction record with current timestamp
       await client.query(
         `INSERT INTO payment_transactions (member_id, membership_id, transaction_type, amount, payment_mode, transaction_date, receipt_number)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [member_id, membership_id, 'additional_payment', amount, payment_mode, payment_date, reference_number || null]
+         VALUES ($1, $2, $3, $4, $5, NOW(), $6)`,
+        [member_id, membership_id, 'additional_payment', amount, payment_mode, reference_number || null]
       );
       
       return NextResponse.json({

@@ -136,6 +136,18 @@ const HistoryPage = () => {
     return new Date(dateString).toLocaleDateString('en-IN');
   };
 
+  const formatDateTime = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleString('en-IN', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -348,7 +360,7 @@ const HistoryPage = () => {
                               
                               <div className="text-right">
                                 <p className="text-lg font-bold text-green-600">{formatCurrency(transaction.amount)}</p>
-                                <p className="text-xs text-gray-500">{formatDate(transaction.transaction_date)}</p>
+                                <p className="text-xs text-gray-500">{formatDateTime(transaction.transaction_date)}</p>
                               </div>
                             </div>
                             
