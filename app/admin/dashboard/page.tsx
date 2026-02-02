@@ -416,7 +416,7 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold text-gray-900">Expiring Soon</h3>
               <button 
                 onClick={() => router.push('/admin/expired')}
-                className="text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                className="text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors cursor-pointer"
               >
                 View All
               </button>
