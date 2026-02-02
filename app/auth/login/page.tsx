@@ -79,13 +79,13 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-black/50"></div>
         
         {/* Gym Icon Top Left */}
-        <div className="absolute top-8 left-8 z-10">
+        {/* <div className="absolute top-8 left-8 z-10">
           <div className="w-12 h-12 border-2 border-white/30 rounded-lg flex items-center justify-center">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V3a1 1 0 011 1v1M7 4V3a1 1 0 011-1v0M7 4l1 16h8l1-16M7 4h10" />
             </svg>
           </div>
-        </div>
+        </div> */}
 
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">

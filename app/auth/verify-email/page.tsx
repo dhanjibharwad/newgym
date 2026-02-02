@@ -170,13 +170,13 @@ function VerifyEmailForm() {
         <div className="absolute inset-0 bg-black/50"></div>
         
         {/* Email Icon Top Left */}
-        <div className="absolute top-8 left-8 z-10">
+        {/* <div className="absolute top-8 left-8 z-10">
           <div className="w-12 h-12 border-2 border-white/30 rounded-lg flex items-center justify-center">
             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-        </div>
+        </div> */}
 
         {/* Content */}
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">

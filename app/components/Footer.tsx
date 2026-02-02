@@ -45,9 +45,9 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm">
               <li><a href="#" className={linkClasses}>Member Portal</a></li>
               <li><a href="#" className={linkClasses}>Class Booking</a></li>
-              <li><a href="/extra/privacy/" className={linkClasses}>Privacy Policy</a></li>
-              <li><a href="/home/FAQ" className={linkClasses}>FAQs</a></li>
-              <li><a href="/extra/terms/" className={linkClasses}>Terms</a></li>
+              <li><a href="#" className={linkClasses}>Privacy Policy</a></li>
+              <li><a href="#" className={linkClasses}>FAQs</a></li>
+              <li><a href="#" className={linkClasses}>Terms</a></li>
             </ul>
           </div>
 
@@ -64,15 +64,15 @@ const Footer: React.FC = () => {
           {/* Contact Us & Address (Spans 2 columns on medium screens) */}
           <div className="col-span-2 md:col-span-2">
             <h3 className={titleClasses}>Contact Us</h3>
-            <address className="not-italic text-sm mb-6">
+            {/* <address className="not-italic text-sm mb-6">
               **FitZone Gym Management**<br />
               Fitness District, Health Plaza, 560001
-            </address>
+            </address> */}
 
             <h4 className="text-sm font-semibold mb-2">24X7 SUPPORT ( ALL DAYS )</h4>
-            <div className="text-sm space-y-1 mb-6">
+            {/* <div className="text-sm space-y-1 mb-6">
               <p>Membership : <a href="mailto:membership@fitzone.com" className={contactLinkClasses}>membership@fitzone.com</a></p>
-            </div>
+            </div> */}
             
             {/* Contact Icons */}
             <div className="flex space-x-6 mb-8">
@@ -99,20 +99,20 @@ const Footer: React.FC = () => {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center">
             
             {/* Download App Section */}
-            <div className="p-6 mb-8 lg:mb-0 max-w-sm w-full bg-gradient-to-r from-gray-800 to-gray-700 border border-yellow-400 rounded-lg">
+            {/* <div className="p-6 mb-8 lg:mb-0 max-w-sm w-full bg-gradient-to-r from-gray-800 to-gray-700 border border-yellow-400 rounded-lg">
                 <p className="text-base font-semibold mb-3">Download FitZone App</p>
                 <p className="text-sm mb-4">Book classes, track workouts & manage your membership on the go</p>
                 <div className="flex space-x-3">
                     <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store" className="h-10" /></a>
                     <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" className="h-10" /></a>
                 </div>
-            </div>
+            </div> */}
             
             {/* Find Us On & Payment Methods */}
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-12 w-full lg:w-auto justify-between">
                 
                 {/* Social Media Icons */}
-                <div className="flex items-center space-x-4">
+                {/* <div className="flex items-center space-x-4">
                     <p className="text-sm font-semibold">Find Us On</p>
                     <div className="flex space-x-2">
                         {['Insta', 'FB', 'LinkedIn', 'YouTube', 'X'].map((platform) => (
@@ -121,16 +121,15 @@ const Footer: React.FC = () => {
                             </a>
                         ))}
                     </div>
-                </div>
+                </div> */}
                 
                 {/* Payment Icons (Text placeholder) */}
-                <div className="text-xs text-gray-400 flex space-x-4">
+                {/* <div className="text-xs text-gray-400 flex space-x-4">
                     <span>VISA</span>
                     <span>PayPal</span>
                     <span>AMEX</span>
-                    <span>GPay</span>
-                    <span>UPI</span>
-                </div>
+                    ?
+                </div> */}
             </div>
         </div>
       </div>

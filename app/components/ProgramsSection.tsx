@@ -1,17 +1,11 @@
 'use client'
 
-import { Clock, Users, Calendar, Star } from "lucide-react";
-
 const ClassesPage = () => {
   const classes = [
     {
       id: 1,
       name: "Zumba",
       description: "High-energy dance fitness combining Latin rhythms with easy-to-follow moves",
-      duration: "45 min",
-      capacity: "25 people",
-      schedule: "Mon, Wed, Fri - 7:00 PM",
-      instructor: "Maria Rodriguez",
       level: "All Levels",
       image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400&h=300&fit=crop"
     },
@@ -19,10 +13,6 @@ const ClassesPage = () => {
       id: 2,
       name: "Abs Training",
       description: "Intensive core workout targeting abdominal muscles and building strength",
-      duration: "30 min",
-      capacity: "15 people",
-      schedule: "Tue, Thu, Sat - 6:30 AM",
-      instructor: "John Smith",
       level: "Intermediate",
       image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop"
     },
@@ -30,10 +20,6 @@ const ClassesPage = () => {
       id: 3,
       name: "Cardio Blast",
       description: "High-intensity cardio workout to boost endurance and burn calories",
-      duration: "40 min",
-      capacity: "20 people",
-      schedule: "Daily - 6:00 AM, 8:00 PM",
-      instructor: "Sarah Johnson",
       level: "All Levels",
       image: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=400&h=300&fit=crop"
     },
@@ -41,10 +27,6 @@ const ClassesPage = () => {
       id: 4,
       name: "Yoga Flow",
       description: "Gentle flowing movements to improve flexibility and mindfulness",
-      duration: "60 min",
-      capacity: "18 people",
-      schedule: "Mon, Wed, Fri - 9:00 AM",
-      instructor: "Lisa Chen",
       level: "Beginner",
       image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
     },
@@ -52,10 +34,6 @@ const ClassesPage = () => {
       id: 5,
       name: "HIIT Training",
       description: "High-Intensity Interval Training for maximum calorie burn",
-      duration: "35 min",
-      capacity: "12 people",
-      schedule: "Tue, Thu - 7:00 AM, 6:00 PM",
-      instructor: "Mike Wilson",
       level: "Advanced",
       image: "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=400&h=300&fit=crop"
     },
@@ -63,10 +41,6 @@ const ClassesPage = () => {
       id: 6,
       name: "Pilates",
       description: "Low-impact exercises focusing on core strength and posture",
-      duration: "50 min",
-      capacity: "16 people",
-      schedule: "Mon, Wed, Fri - 11:00 AM",
-      instructor: "Emma Davis",
       level: "All Levels",
       image: "https://thecore.pilates.com/wp-content/uploads/2024/09/2409-Pilates-for-Athletes_A-Whole-Body-Approach_Core-Feature-1536x937.jpg"
     }
@@ -115,29 +89,6 @@ const ClassesPage = () => {
                   <p className="text-gray-600 leading-relaxed">
                     {classItem.description}
                   </p>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <Clock className="w-4 h-4" />
-                      <span>{classItem.duration}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <Users className="w-4 h-4" />
-                      <span>{classItem.capacity}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <Calendar className="w-4 h-4" />
-                      <span>{classItem.schedule}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <Star className="w-4 h-4" />
-                      <span>Instructor: {classItem.instructor}</span>
-                    </div>
-                  </div>
-
-                  <button className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-yellow-400 to-blue-500 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-200">
-                    Book Class
-                  </button>
                 </div>
               </div>
             ))}
@@ -154,9 +105,9 @@ const ClassesPage = () => {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Join our community and get access to all classes with our membership plans
           </p>
-          <button className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-blue-500 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-200">
+          {/* <button className="px-8 py-4 bg-gradient-to-r from-yellow-400 to-blue-500 text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-200">
             View Membership Plans
-          </button>
+          </button> */}
         </div>
       </section>
     </div>

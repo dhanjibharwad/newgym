@@ -15,7 +15,7 @@ const HeroSection = () => {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-end justify-center overflow-hidden pb-8"
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
@@ -58,8 +58,8 @@ const HeroSection = () => {
           className={`transition-all duration-1000 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
             }`}
         >
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 leading-[0.9]">
-            <span className="block text-foreground">Build Your</span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-6 leading-tight">
+            <span className="block text-white/90">Build Your</span>
             <span className="block gradient-text mt-2">Ultimate Physique</span>
           </h1>
 
@@ -72,7 +72,7 @@ const HeroSection = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div
+          {/* <div
             className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-500 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
           >
@@ -81,11 +81,11 @@ const HeroSection = () => {
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
 
-            {/* <button className="group min-w-[200px] px-8 py-4 rounded-xl border border-white/20 text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition">
+            <button className="group min-w-[200px] px-8 py-4 rounded-xl border border-white/20 text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/10 transition">
               <Play className="w-5 h-5" />
               Explore Programs
-            </button> */}
-          </div>
+            </button>
+          </div> */}
         </div>
       </div>
     </section>

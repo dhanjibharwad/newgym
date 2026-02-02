@@ -17,13 +17,13 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({
   logo = '/logo.png',
   menuItems = [
-    { label: 'HOME', href: '/' },
-    { label: 'ABOUT US', href: '/about' },
+    // { label: 'HOME', href: '/' },
+    // { label: 'ABOUT US', href: '/about' },
     // { label: 'CLASSES', href: '/classes' },
-    { label: 'SERVICES', href: '/services' },
-    { label: 'OUR TEAM', href: '/team' },
-    { label: 'PAGES', href: '/pages' },
-    { label: 'CONTACT', href: '/contact' },
+    // { label: 'SERVICES', href: '/services' },
+    // { label: 'OUR TEAM', href: '/team' },
+    // { label: 'PAGES', href: '/pages' },
+    // { label: 'CONTACT', href: '/contact' },
   ],
 }) => {
   const [isOpen, setIsOpen] = useState(false);

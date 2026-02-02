@@ -21,7 +21,7 @@ const IntroSection = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-[0.9]">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter mb-6 leading-tight">
                 <span className="block text-foreground">Why Choose</span>
                 <span className="block gradient-text mt-2">Our Gym?</span>
               </h2>
