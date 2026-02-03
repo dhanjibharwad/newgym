@@ -7,6 +7,14 @@ export async function GET(request: NextRequest) {
   try {
     client = await pool.connect();
     
+    // First, update expired memberships in the database
+    await client.query(`
+      UPDATE memberships 
+      SET status = 'expired' 
+      WHERE end_date < CURRENT_DATE 
+      AND status != 'expired'
+    `);
+    
     // Get members with membership and payment data using correct table/column names
     const result = await client.query(`
       SELECT 

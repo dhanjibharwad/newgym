@@ -268,9 +268,9 @@ const MembersPage = () => {
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              {/* <option value="inactive">Inactive</option> */}
               <option value="expired">Expired</option>
-              <option value="suspended">Suspended</option>
+              {/* <option value="suspended">Suspended</option> */}
             </select>
           </div>
 
@@ -284,7 +284,7 @@ const MembersPage = () => {
               <option value="all">All Payments</option>
               <option value="full">Paid Full</option>
               <option value="partial">Partial</option>
-              <option value="pending">Pending</option>
+              {/* <option value="pending">Pending</option> */}
             </select>
           </div>
         </div>
