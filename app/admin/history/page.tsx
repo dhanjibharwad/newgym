@@ -26,6 +26,7 @@ interface MemberTransaction {
   payment_mode: string;
   transaction_date: string;
   receipt_number: string;
+  created_by?: string;
   created_at: string;
   full_name: string;
   phone_number: string;
@@ -356,6 +357,7 @@ const HistoryPage = () => {
                               <div>
                                 <h4 className="text-sm font-semibold text-gray-900">{typeInfo.label}</h4>
                                 <p className="text-xs text-gray-500">{transaction.plan_name}</p>
+                                <p className="text-xs text-orange-600">Added by: {transaction.created_by || '-'}</p>
                               </div>
                               
                               <div className="text-right">

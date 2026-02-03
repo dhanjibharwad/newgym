@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { getSession } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { member_id, membership_id, amount, payment_mode, payment_date, reference_number } = body;
 
+    const session = await getSession();
     const client = await pool.connect();
     
     try {
@@ -50,10 +52,11 @@ export async function POST(request: NextRequest) {
       );
       
       // Insert transaction record with current timestamp
+      const userName = session?.user?.name || 'Reception';
       await client.query(
-        `INSERT INTO payment_transactions (member_id, membership_id, transaction_type, amount, payment_mode, transaction_date, receipt_number)
-         VALUES ($1, $2, $3, $4, $5, NOW(), $6)`,
-        [member_id, membership_id, 'additional_payment', amount, payment_mode, reference_number || null]
+        `INSERT INTO payment_transactions (member_id, membership_id, transaction_type, amount, payment_mode, transaction_date, receipt_number, created_by)
+         VALUES ($1, $2, $3, $4, $5, NOW(), $6, $7)`,
+        [member_id, membership_id, 'additional_payment', amount, payment_mode, reference_number || null, userName]
       );
       
       return NextResponse.json({

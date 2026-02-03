@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
           pt.payment_mode,
           pt.transaction_date,
           pt.receipt_number,
+          pt.created_by,
           pt.created_at,
           pt.description
         FROM payment_transactions pt

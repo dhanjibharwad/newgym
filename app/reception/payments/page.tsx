@@ -49,6 +49,7 @@ interface PaymentTransaction {
   payment_mode: string;
   transaction_date: string;
   receipt_number: string;
+  created_by?: string;
   created_at: string;
   full_name: string;
   phone_number: string;
@@ -887,6 +888,7 @@ const PaymentsPage = () => {
                           <div>
                             <h4 className="text-sm font-medium text-gray-900">{typeInfo.label}</h4>
                             <p className="text-xs text-gray-500">{formatDateTime(transaction.transaction_date)}</p>
+                            <p className="text-xs text-orange-600">Added by: {transaction.created_by || '-'}</p>
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-semibold text-green-600">{formatCurrency(transaction.amount)}</p>

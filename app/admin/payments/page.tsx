@@ -49,6 +49,7 @@ interface PaymentTransaction {
   payment_mode: string;
   transaction_date: string;
   receipt_number: string;
+  created_by?: string;
   created_at: string;
   full_name: string;
   phone_number: string;
@@ -64,6 +65,7 @@ const PaymentsPage = () => {
   const [paymentHistory, setPaymentHistory] = useState<PaymentTransaction[]>([]);
   const [memberTransactions, setMemberTransactions] = useState<PaymentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<{name: string} | null>(null);
   const [viewMode, setViewMode] = useState<'summary' | 'history'>('summary');
   const [selectedMemberForTimeline, setSelectedMemberForTimeline] = useState<Payment | null>(null);
   const [showTimelineModal, setShowTimelineModal] = useState(false);
@@ -84,6 +86,7 @@ const PaymentsPage = () => {
   useEffect(() => {
     fetchPayments();
     fetchPaymentHistory();
+    fetchCurrentUser();
   }, []);
 
   useEffect(() => {
@@ -101,6 +104,20 @@ const PaymentsPage = () => {
       return () => clearTimeout(timer);
     }
   }, [notification]);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          setCurrentUser(result.user);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
 
   const handleAddPayment = (payment: Payment) => {
     const pendingAmount = payment.total_amount - payment.paid_amount;
@@ -775,6 +792,9 @@ const PaymentsPage = () => {
 
               <div className="border-t border-gray-200 pt-4">
                 <h5 className="text-sm font-medium text-gray-900 mb-4">Add New Payment</h5>
+                <div className="bg-blue-50 p-3 rounded-lg mb-4">
+                  <p className="text-sm text-blue-800">Adding payment as: <span className="font-medium">{currentUser?.name || '-'}</span></p>
+                </div>
                 
                 <div className="space-y-4">
                   <div>
@@ -880,6 +900,7 @@ const PaymentsPage = () => {
                           <div>
                             <h4 className="text-sm font-medium text-gray-900">{typeInfo.label}</h4>
                             <p className="text-xs text-gray-500">{formatDateTime(transaction.transaction_date)}</p>
+                            <p className="text-xs text-orange-600">Added by: {transaction.created_by || '-'}</p>
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-semibold text-green-600">{formatCurrency(transaction.amount)}</p>
