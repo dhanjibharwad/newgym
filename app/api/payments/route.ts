@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
           m.profile_photo_url,
           ms.start_date,
           ms.end_date,
+          ms.created_by,
           mp.plan_name
         FROM payments p
         JOIN memberships ms ON p.membership_id = ms.id

@@ -38,6 +38,7 @@ interface Payment {
   start_date: string;
   end_date: string;
   profile_photo_url: string;
+  created_by?: string;
 }
 
 interface PaymentTransaction {
@@ -546,6 +547,7 @@ const PaymentsPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Mode</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
@@ -587,6 +589,9 @@ const PaymentsPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(payment.payment_status)}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-gray-900">{payment.created_by || 'N/A'}</span>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {payment.next_due_date ? (
                         <div className={`text-sm ${isOverdue(payment.next_due_date) ? 'text-red-600 font-medium' : 'text-gray-900'}`}>

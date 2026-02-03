@@ -463,6 +463,7 @@ const AddMemberPage = () => {
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleInputChange}
+                    maxLength={10}
                     data-error={!!errors.phoneNumber}
                     className={`w-full pl-11 pr-4 py-3 bg-white border ${
                       errors.phoneNumber ? 'border-red-500' : 'border-slate-300'
