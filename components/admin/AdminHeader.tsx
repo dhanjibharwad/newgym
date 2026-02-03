@@ -37,7 +37,7 @@ export default function AdminHeader() {
     <header className="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center">
       {/* Left side - Gym name */}
       <div className="flex items-center">
-        <h1 className="text-xl font-bold text-orange-600">EAGLE GYM</h1>
+        {/* <h1 className="text-xl font-bold text-orange-600">EAGLE GYM</h1> */}
         <span className="ml-2 text-sm text-gray-500">Admin Portal</span>
       </div>
 
