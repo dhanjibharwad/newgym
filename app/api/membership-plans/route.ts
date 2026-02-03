@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
+import { getSession } from '@/lib/auth';
 
 export async function GET() {
   try {
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
       );
     }
     
-    // Determine user role from request headers or URL
+    const session = await getSession();
     const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
     
     const client = await pool.connect();
@@ -62,6 +63,7 @@ export async function POST(request: Request) {
       );
       
       // Log the action
+      const userName = session?.user?.name || 'Unknown User';
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -69,7 +71,7 @@ export async function POST(request: Request) {
           action: 'CREATE',
           entity_type: 'membership_plan',
           entity_id: result.rows[0].id,
-          details: `Created plan: ${plan_name} (${duration_months} months, ₹${price})`,
+          details: `Created plan by (${userName}): ${plan_name} (${duration_months} months, ₹${price})`,
           user_role: userRole
         })
       });
@@ -109,7 +111,7 @@ export async function PUT(request: Request) {
       );
     }
     
-    // Determine user role from request headers or URL
+    const session = await getSession();
     const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
     
     const client = await pool.connect();
@@ -133,6 +135,7 @@ export async function PUT(request: Request) {
       // Log the action
       if (oldPlan.rows.length > 0) {
         const old = oldPlan.rows[0];
+        const userName = session?.user?.name || 'Unknown User';
         await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -140,7 +143,7 @@ export async function PUT(request: Request) {
             action: 'UPDATE',
             entity_type: 'membership_plan',
             entity_id: id,
-            details: `Updated plan: ${old.plan_name} → ${plan_name}, ${old.duration_months}m → ${duration_months}m, ₹${old.price} → ₹${price}`,
+            details: `Updated plan by (${userName}): ${old.plan_name} → ${plan_name}, ${old.duration_months}m → ${duration_months}m, ₹${old.price} → ₹${price}`,
             user_role: userRole
           })
         });
@@ -182,7 +185,7 @@ export async function DELETE(request: Request) {
       );
     }
     
-    // Determine user role from request headers or URL
+    const session = await getSession();
     const userRole = request.headers.get('referer')?.includes('/admin/') ? 'admin' : 'reception';
     
     const client = await pool.connect();
@@ -219,6 +222,7 @@ export async function DELETE(request: Request) {
       // Log the action
       if (planDetails.rows.length > 0) {
         const plan = planDetails.rows[0];
+        const userName = session?.user?.name || 'Unknown User';
         await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:8004'}/api/audit-logs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -226,7 +230,7 @@ export async function DELETE(request: Request) {
             action: 'DELETE',
             entity_type: 'membership_plan',
             entity_id: id,
-            details: `Deleted plan: ${plan.plan_name} (${plan.duration_months} months, ₹${plan.price})`,
+            details: `Deleted plan by (${userName}): ${plan.plan_name} (${plan.duration_months} months, ₹${plan.price})`,
             user_role: userRole
           })
         });
