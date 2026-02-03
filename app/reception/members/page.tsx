@@ -15,7 +15,10 @@ import {
   Clock,
   AlertCircle,
   Grid3X3,
-  List
+  List,
+  Edit,
+  Save,
+  X
 } from 'lucide-react';
 
 interface Member {
@@ -51,6 +54,56 @@ const MembersPage = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [paymentFilter, setPaymentFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+  const [editingMember, setEditingMember] = useState<number | null>(null);
+  const [editForm, setEditForm] = useState({ phone_number: '', email: '' });
+  const [updating, setUpdating] = useState(false);
+
+  const handleEditMember = (member: Member) => {
+    setEditingMember(member.id);
+    setEditForm({
+      phone_number: member.phone_number,
+      email: member.email || ''
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMember(null);
+    setEditForm({ phone_number: '', email: '' });
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingMember) return;
+    
+    setUpdating(true);
+    try {
+      const response = await fetch(`/api/members/${editingMember}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phone_number: editForm.phone_number,
+          email: editForm.email
+        })
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          setMembers(prev => prev.map(member => 
+            member.id === editingMember 
+              ? { ...member, phone_number: editForm.phone_number, email: editForm.email }
+              : member
+          ));
+          handleCancelEdit();
+        }
+      }
+    } catch (error) {
+      console.error('Error updating member:', error);
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   useEffect(() => {
     fetchMembers();
@@ -259,6 +312,9 @@ const MembersPage = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -295,18 +351,41 @@ const MembersPage = () => {
 
                     {/* Contact */}
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm text-gray-900">
-                          <Phone className="w-4 h-4 mr-2 text-gray-400" />
-                          {member.phone_number}
-                        </div>
-                        {member.email && (
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Mail className="w-4 h-4 mr-2 text-gray-400" />
-                            {member.email}
+                      {editingMember === member.id ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center">
+                            <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                            <input
+                              type="tel"
+                              value={editForm.phone_number}
+                              onChange={(e) => setEditForm({...editForm, phone_number: e.target.value})}
+                              className="text-sm border border-gray-300 rounded px-2 py-1 w-32"
+                            />
                           </div>
-                        )}
-                      </div>
+                          <div className="flex items-center">
+                            <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                            <input
+                              type="email"
+                              value={editForm.email}
+                              onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                              className="text-sm border border-gray-300 rounded px-2 py-1 w-40"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <div className="flex items-center text-sm text-gray-900">
+                            <Phone className="w-4 h-4 mr-2 text-gray-400" />
+                            {member.phone_number}
+                          </div>
+                          {member.email && (
+                            <div className="flex items-center text-sm text-gray-500">
+                              <Mail className="w-4 h-4 mr-2 text-gray-400" />
+                              {member.email}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </td>
 
                     {/* Membership */}
@@ -339,6 +418,41 @@ const MembersPage = () => {
                     {/* Status */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       {getStatusBadge(member.membership_status)}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {editingMember === member.id ? (
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={handleSaveEdit}
+                            disabled={updating}
+                            className="text-green-600 hover:text-green-900 disabled:opacity-50"
+                            title="Save changes"
+                          >
+                            {updating ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
+                            ) : (
+                              <Save className="w-4 h-4" />
+                            )}
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            className="text-gray-600 hover:text-gray-900"
+                            title="Cancel edit"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleEditMember(member)}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Edit contact info"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
