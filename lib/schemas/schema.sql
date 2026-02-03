@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS memberships (
     membership_type VARCHAR(100) CHECK (membership_type IN ('Gym Only', 'Gym + Personal Training')),
     locker_required BOOLEAN DEFAULT FALSE,
     status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'expired', 'suspended')),
+    created_by VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

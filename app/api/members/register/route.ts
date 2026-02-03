@@ -101,11 +101,12 @@ export async function POST(request: NextRequest) {
       endDate.setMonth(endDate.getMonth() + monthsToAdd);
       
       // Insert membership
+      const userName = session?.user?.name || 'user not logged in';
       const membershipResult = await client.query(
         `INSERT INTO memberships (
           member_id, plan_id, start_date, end_date, trainer_assigned,
-          batch_time, membership_type, locker_required
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
+          batch_time, membership_type, locker_required, created_by
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
         [
           memberId,
           planId,
@@ -114,7 +115,8 @@ export async function POST(request: NextRequest) {
           data.trainerAssigned || null,
           data.batchTime || null,
           data.membershipType || null,
-          data.lockerRequired || false
+          data.lockerRequired || false,
+          userName
         ]
       );
       
