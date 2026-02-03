@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { writeFile } from 'fs/promises';
 import path from 'path';
+import { getSession } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
+    const session = await getSession();
     
     // Extract data from FormData
     const data = {
@@ -139,16 +141,18 @@ export async function POST(request: NextRequest) {
       
       // Insert initial payment transaction if amount was paid
       if (data.amountPaidNow > 0) {
+        const userName = session?.user?.name || 'user not logged in';
         await client.query(
           `INSERT INTO payment_transactions (
-            member_id, membership_id, transaction_type, amount, payment_mode, transaction_date
-          ) VALUES ($1, $2, $3, $4, $5, NOW())`,
+            member_id, membership_id, transaction_type, amount, payment_mode, transaction_date, created_by
+          ) VALUES ($1, $2, $3, $4, $5, NOW(), $6)`,
           [
             memberId,
             membershipId,
             'membership_fee',
             data.amountPaidNow,
-            data.paymentMode
+            data.paymentMode,
+            userName
           ]
         );
       }
