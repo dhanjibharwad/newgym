@@ -137,6 +137,22 @@ export async function POST(request: NextRequest) {
         ]
       );
       
+      // Insert initial payment transaction if amount was paid
+      if (data.amountPaidNow > 0) {
+        await client.query(
+          `INSERT INTO payment_transactions (
+            member_id, membership_id, transaction_type, amount, payment_mode, transaction_date
+          ) VALUES ($1, $2, $3, $4, $5, NOW())`,
+          [
+            memberId,
+            membershipId,
+            'membership_fee',
+            data.amountPaidNow,
+            data.paymentMode
+          ]
+        );
+      }
+      
       // Insert medical info
       await client.query(
         `INSERT INTO medical_info (

@@ -32,7 +32,13 @@ export async function GET(request: NextRequest) {
           m.profile_photo_url,
           mp.plan_name,
           p.total_amount,
-          p.paid_amount,
+          (
+            SELECT COALESCE(SUM(pt2.amount), 0)
+            FROM payment_transactions pt2 
+            WHERE pt2.membership_id = pt.membership_id 
+            AND pt2.transaction_date <= pt.transaction_date
+            AND pt2.id <= pt.id
+          ) as cumulative_paid,
           p.payment_status
         FROM payment_transactions pt
         JOIN memberships ms ON pt.membership_id = ms.id
@@ -43,9 +49,17 @@ export async function GET(request: NextRequest) {
         ORDER BY pt.transaction_date DESC, pt.created_at DESC
       `, [memberId]);
       
+      const transactionsWithNumbers = result.rows.map(transaction => ({
+        ...transaction,
+        amount: parseFloat(transaction.amount) || 0,
+        total_amount: parseFloat(transaction.total_amount) || 0,
+        cumulative_paid: parseFloat(transaction.cumulative_paid) || 0,
+        remaining_amount: (parseFloat(transaction.total_amount) || 0) - (parseFloat(transaction.cumulative_paid) || 0)
+      }));
+      
       return NextResponse.json({
         success: true,
-        transactions: result.rows
+        transactions: transactionsWithNumbers
       });
       
     } finally {

@@ -32,7 +32,7 @@ interface MemberTransaction {
   profile_photo_url: string;
   plan_name: string;
   total_amount: number;
-  paid_amount: number;
+  remaining_amount: number;
   payment_status: string;
 }
 
@@ -380,7 +380,7 @@ const HistoryPage = () => {
                               
                               <div>
                                 <span className="text-gray-500">Remaining:</span>
-                                <p className="font-medium text-red-600 mt-1">{formatCurrency(transaction.total_amount - transaction.paid_amount)}</p>
+                                <p className="font-medium text-red-600 mt-1">{formatCurrency(transaction.remaining_amount)}</p>
                               </div>
                             </div>
                             
