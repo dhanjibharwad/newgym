@@ -32,7 +32,7 @@ interface MemberTransaction {
   profile_photo_url: string;
   plan_name: string;
   total_amount: number;
-  paid_amount: number;
+  remaining_amount?: number;
   payment_status: string;
 }
 
@@ -281,7 +281,7 @@ const HistoryPage = () => {
                 <p className="text-gray-600">{selectedMember.phone_number}</p>
                 <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
                   <span>Total Transactions: {memberTransactions.length}</span>
-                  <span>Total Paid: {formatCurrency(memberTransactions.reduce((sum, t) => sum + t.amount, 0))}</span>
+                  <span>Total Paid: {formatCurrency(memberTransactions.reduce((sum, t) => sum + (parseFloat(t.amount.toString()) || 0), 0))}</span>
                 </div>
               </div>
             </div>
@@ -359,7 +359,7 @@ const HistoryPage = () => {
                               </div>
                               
                               <div className="text-right">
-                                <p className="text-lg font-bold text-green-600">{formatCurrency(transaction.amount)}</p>
+                                <p className="text-lg font-bold text-green-600">{formatCurrency(parseFloat(transaction.amount.toString()) || 0)}</p>
                                 <p className="text-xs text-gray-500">{formatDateTime(transaction.transaction_date)}</p>
                               </div>
                             </div>
@@ -375,12 +375,12 @@ const HistoryPage = () => {
                               
                               <div>
                                 <span className="text-gray-500">Total Amount:</span>
-                                <p className="font-medium mt-1">{formatCurrency(transaction.total_amount)}</p>
+                                <p className="font-medium mt-1">{formatCurrency(parseFloat(transaction.total_amount.toString()) || 0)}</p>
                               </div>
                               
                               <div>
                                 <span className="text-gray-500">Remaining:</span>
-                                <p className="font-medium text-red-600 mt-1">{formatCurrency(transaction.total_amount - transaction.paid_amount)}</p>
+                                <p className="font-medium text-red-600 mt-1">{formatCurrency(parseFloat(transaction.remaining_amount?.toString() || '0') || 0)}</p>
                               </div>
                             </div>
                             

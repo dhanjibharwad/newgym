@@ -172,6 +172,11 @@ const PaymentsPage = () => {
         await fetchPaymentHistory();
         closePaymentModal();
         setNotification({type: 'success', message: 'Payment added successfully!'});
+        
+        // Force refresh payment history to show latest transaction
+        setTimeout(() => {
+          fetchPaymentHistory();
+        }, 500);
       } else {
         setNotification({type: 'error', message: result.message || 'Failed to add payment'});
       }
@@ -295,15 +300,17 @@ const PaymentsPage = () => {
     return matchesSearch && matchesStatus && matchesMode;
   });
 
-  const filteredPaymentHistory = paymentHistory.filter(transaction => {
-    const matchesSearch = transaction.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         transaction.phone_number.includes(searchTerm);
-    
-    const matchesStatus = statusFilter === 'all' || transaction.payment_status === statusFilter;
-    const matchesMode = paymentModeFilter === 'all' || transaction.payment_mode === paymentModeFilter;
-    
-    return matchesSearch && matchesStatus && matchesMode;
-  });
+  const filteredPaymentHistory = paymentHistory
+    .filter(transaction => {
+      const matchesSearch = transaction.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           transaction.phone_number.includes(searchTerm);
+      
+      const matchesStatus = statusFilter === 'all' || transaction.payment_status === statusFilter;
+      const matchesMode = paymentModeFilter === 'all' || transaction.payment_mode === paymentModeFilter;
+      
+      return matchesSearch && matchesStatus && matchesMode;
+    })
+    .sort((a, b) => new Date(b.transaction_date).getTime() - new Date(a.transaction_date).getTime());
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
